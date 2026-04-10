@@ -92,14 +92,14 @@
                                             {{ $activity->material->name ?? 'Unknown Material' }}
                                         </td>
                                         <td>
-                                            @if(($activity->type ?? 'IN') == 'IN')
+                                            @if(($activity->trans_type ?? 'in') == 'in')
                                                 <span class="badge bg-success bg-opacity-25 text-success border border-success">Masuk</span>
                                             @else
                                                 <span class="badge bg-danger bg-opacity-25 text-danger border border-danger">Keluar</span>
                                             @endif
                                         </td>
                                         <td class="text-end fw-bold">
-                                            {{ number_format($activity->quantity ?? 0) }}
+                                            {{ number_format($activity->amount ?? 0) }}
                                         </td>
                                     </tr>
                                 @empty

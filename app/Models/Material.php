@@ -30,10 +30,9 @@ class Material extends Model
         'name'
     ];
 
-
     public function stock()
     {
-        return $this->hasMany(Stock::class);
+        return $this->hasOne(Stock::class);
     }
 
 }

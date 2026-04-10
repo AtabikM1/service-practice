@@ -1,14 +1,14 @@
 <div class="d-flex flex-column h-100 p-3">
     <a href="#" class="d-flex align-items-center mb-4 text-white text-decoration-none">
         <i class="bi bi-cpu-fill fs-3 me-2 text-info"></i>
-        <span class="fs-5 fw-bold tracking-wide">PT INDOPRIMA</span>
+        <span class="fs-5 fw-bold tracking-wide">Invent</span>
     </a>
 
     <hr class="text-white-50 mt-0">
 
     <ul class="nav nav-pills flex-column mb-auto gap-1">
 
-        <li class="nav-item text-muted small fw-bold mb-1 mt-2 text-uppercase">Main Menu</li>
+        <li class="nav-item small fw-bold mb-1 mt-2 text-uppercase text-white">Main Menu</li>
 
         <li class="nav-item">
             <a href="{{ url('/dashboard') }}" class="nav-link text-white {{ request()->is('dashboard') ? 'active-menu' : '' }}">
@@ -16,7 +16,8 @@
             </a>
         </li>
 
-        <li class="nav-item text-muted small fw-bold mb-1 mt-4 text-uppercase">Modules</li>
+        <li class="nav-item
+         small fw-bold mb-1 mt-4 text-uppercase text-white">Modules</li>
 
         <li class="nav-item">
             <a href="#" class="nav-link text-white {{ request()->is('wms*') ? 'active-menu' : '' }}">
@@ -31,6 +32,14 @@
         <li class="nav-item">
             <a href="#" class="nav-link text-white {{ request()->is('solar*') ? 'active-menu' : '' }}">
                 <i class="bi bi-fuel-pump me-2"></i> Solar Management
+            </a>
+        </li>
+        <li class="nav-item
+         small fw-bold mb-1 mt-4 text-uppercase text-white">Master</li>
+
+        <li class="nav-item">
+            <a href="{{url('/materials')}}" class="nav-link text-white {{ request()->is('materials') ? 'active-menu' : '' }}">
+                <i class="bi bi-box-seam me-2"></i> Material
             </a>
         </li>
     </ul>

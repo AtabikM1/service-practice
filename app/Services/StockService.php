@@ -14,6 +14,7 @@ class StockService{
                 ['material_id' => $data['material_id']],
                 ['quantity' => 0]
             );
+            $stock = Stock::where('id', $stock->id)->lockForUpdate()->first();
             $isIn = $data['trans_type'] === "in";
             $newWeight = $isIn ? $data['amount'] + $stock->quantity : $stock->quantity -$data['amount'];
             if(!$isIn && $newWeight < 0){

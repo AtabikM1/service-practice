@@ -25,7 +25,19 @@ class LedgerSeeder extends Seeder
        $transactions =[[
            'material_id' => 1,
            'trans_type' => 'in',
-           'amount' => 100,]
+           'amount' => 100,],
+           [
+           'material_id' => 1,
+           'trans_type' => 'out',
+           'amount' => 95,],
+           [
+           'material_id' => 2,
+           'trans_type' => 'in',
+           'amount' => 100,],
+           [
+               'material_id' => 5,
+               'trans_type' => 'out',
+               'amount' => 100,]
        ];
        foreach ($transactions as $data) {
             try{

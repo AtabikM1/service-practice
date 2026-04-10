@@ -13,20 +13,19 @@ class MaterialController extends Controller
     {
         $this->materialService = $materialService;
     }
-
+    public function index(){
+        $materials = $this->materialService->getStats();
+        return view('materials.index', compact('materials'));
+    }
+    public function create(){
+        return view('materials.create');
+    }
     public function store(Request $request){
         $validated = $request->validate([
-            'name' => 'required|string|unique'
+            'name' => 'required|string|unique:materials,name'
         ]);
         $material = $this->materialService->createMaterial($validated);
+        return redirect()->route('materials.index')->with('success', 'Material has been created.');
     }
-    public function update(Request $request){
-        $validated = $request->validate([
-            'name' => 'required|string'
-        ]);
-        $material = $this->materialService->updateMaterial($validated);
-    }
-    public function delete(Material $material){
-        $material->delete();
-    }
+
 }

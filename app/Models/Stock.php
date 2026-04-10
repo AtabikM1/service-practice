@@ -28,4 +28,7 @@ class Stock extends Model
         'material_id',
         'quantity'
     ];
+    public function material(){
+        return $this->belongsTo(Material::class);
+    }
 }
