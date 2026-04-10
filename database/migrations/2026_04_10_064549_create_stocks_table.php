@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
             $table->foreignId('material_id')->references('id')->on('materials');
-            $table->decimal('quantity', 8, 2);
+            $table->decimal('quantity');
             $table->timestamps();
         });
     }

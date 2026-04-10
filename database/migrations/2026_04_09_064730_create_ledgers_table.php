@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('material_id')->references('id')->on('materials');
             $table->enum('trans_type', ['in', 'out']);
-            $table->decimal('amount', 8, 2);
-            $table->decimal('balance_after', 8, 2);
+            $table->decimal('amount');
+            $table->decimal('balance_after');
             $table->timestamps();
         });
     }

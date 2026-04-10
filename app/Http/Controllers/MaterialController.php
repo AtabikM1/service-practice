@@ -13,10 +13,20 @@ class MaterialController extends Controller
     {
         $this->materialService = $materialService;
     }
+
     public function store(Request $request){
         $validated = $request->validate([
             'name' => 'required|string|unique'
         ]);
         $material = $this->materialService->createMaterial($validated);
+    }
+    public function update(Request $request){
+        $validated = $request->validate([
+            'name' => 'required|string'
+        ]);
+        $material = $this->materialService->updateMaterial($validated);
+    }
+    public function delete(Material $material){
+        $material->delete();
     }
 }
