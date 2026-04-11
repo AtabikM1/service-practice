@@ -7,17 +7,21 @@ use Illuminate\Database\Seeder;
 
 class MaterialSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $data = [
-            ['name' => 'cement'],
-            ['name' => 'fish'],
+        $materials = [
+            ['name' => 'Besi Baja 10mm'],
+            ['name' => 'Kabel Tembaga 5m'],
+            ['name' => 'Semen Portland 50kg'],
+            ['name' => 'Baut Hexagonal M8'],
         ];
-        foreach ($data as $d) {
-            Material::firstOrCreate($d);
+
+        foreach ($materials as $material) {
+            Material::firstOrCreate(
+                ['name' => $material['name']]
+            );
         }
+
+        $this->command->info('✅ Master Data Material berhasil di-seed.');
     }
 }

@@ -20,18 +20,8 @@
          small fw-bold mb-1 mt-4 text-uppercase text-white">Modules</li>
 
         <li class="nav-item">
-            <a href="#" class="nav-link text-white {{ request()->is('wms*') ? 'active-menu' : '' }}">
-                <i class="bi bi-box-seam me-2"></i> WMS & Material
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="#" class="nav-link text-white {{ request()->is('mps*') ? 'active-menu' : '' }}">
-                <i class="bi bi-gear-wide-connected me-2"></i> Produksi (Plant 6)
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="#" class="nav-link text-white {{ request()->is('solar*') ? 'active-menu' : '' }}">
-                <i class="bi bi-fuel-pump me-2"></i> Solar Management
+            <a href="{{url('/history')}}" class="nav-link text-white {{ request()->is('history') ? 'active-menu' : '' }}">
+                <i class="bi bi-gear-wide-connected me-2"></i> History
             </a>
         </li>
         <li class="nav-item
@@ -52,8 +42,6 @@
             <strong>{{ Auth::user()->name ?? 'Administrator' }}</strong>
         </a>
         <ul class="dropdown-menu dropdown-menu-dark text-small shadow border-0">
-            <li><a class="dropdown-item" href="#">Profile Settings</a></li>
-            <li><hr class="dropdown-divider"></li>
             <li>
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf

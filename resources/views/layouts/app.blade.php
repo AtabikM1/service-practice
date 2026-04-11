@@ -24,24 +24,29 @@
         /* Arsitektur Layout Utama */
         .wrapper {
             display: flex;
-            min-height: 100vh;
+            height: 100vh; /* KUNCI 1: Kunci tinggi aplikasi pas selayar monitor */
+            overflow: hidden; /* KUNCI 2: Matikan scrollbar utama browser */
         }
 
-        /* Sidebar tidak akan mengecil (shrink) */
         .sidebar-wrapper {
             width: 260px;
             background-color: var(--navy-primary);
             color: white;
             flex-shrink: 0;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            height: 100vh;
+            overflow-y: auto; /* Opsional: Jaga-jaga jika besok menumu tambah banyak sampai ke bawah layar */
         }
 
-        /* Area konten akan mengisi sisa ruang */
+        /* Area Sebelah Kanan (Nav, Konten, Footer) */
         .content-wrapper {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            min-width: 0; /* Mencegah tabel mekar melebihi layar */
+            min-width: 0;
+            height: 100vh;
+            overflow-y: auto; /* KUNCI 3: Beri izin scroll hanya di kotak kanan ini */
+            background-color: var(--bg-light); /* Pindahkan background body ke sini */
         }
 
         main {

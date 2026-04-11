@@ -13,8 +13,7 @@
 
         /* Background Container */
         .login-container {
-            background: linear-gradient(rgba(10, 37, 64, 0.8), rgba(10, 37, 64, 0.8)),
-            url("{{ asset('images/pabrik.jpg') }}");
+            background: url("{{ asset('images/warehouse.jpg') }}");
             background-size: cover;
             background-position: center;
             height: 100vh;
@@ -29,7 +28,7 @@
             border: none;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(100px);
             width: 100%;
             max-width: 400px;
         }
@@ -88,7 +87,6 @@
     <div class="login-container">
         <div class="w-100 d-flex flex-column align-items-center px-3">
 
-            <div class="brand-logo">PT INDOPRIMA</div>
 
             <div class="card login-card">
                 <div class="card-header text-center">

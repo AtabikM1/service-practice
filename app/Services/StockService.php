@@ -3,6 +3,7 @@
 namespace App\Services;
 use App\Models\Ledger;
 use App\Models\Stock;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 class StockService{
     /**
@@ -30,5 +31,24 @@ class StockService{
                 'quantity' => $newWeight
             ]);
         });
+    }
+    public function getHistory(Request $request): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    {
+        $query = Ledger::with('material')->orderBy('created_at', 'desc');;
+        if($request->filled('search')){
+            $search = $request->search;;
+            $query->whereHas('material', function($q) use ($search){
+                $q->where('name', 'like', '%'.$search.'%');
+            });
+        }
+        $sortBy  = $request->get('sort', 'created_at');
+        $sortDir  = $request->get('direction', 'desc');
+        $allowedSort = ['created_at', 'transaction_type', 'amount', 'balance_after'];
+        if(in_array($sortBy, $allowedSort)){
+            $query->orderBy($sortBy, $sortDir);
+        }else{
+            $query->latest();
+        }
+        return $query->paginate(15)->withQueryString();
     }
 }

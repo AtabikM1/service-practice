@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\StockController;
 use Illuminate\Support\Facades\Route;
@@ -25,11 +26,11 @@ Route::middleware('guest')->group(function () {
     Route::get('/login',[ AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'authenticate']);
 });
-Route::middleware('auth')->group(function () {
+Route::middleware('auth', 'prevent-back-history')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::resource('materials', MaterialController::class);
     Route::resource('stocks', StockController::class);
-
+    Route::get('/history', [HistoryController::class, 'index'])->name('history.index');
 
 });

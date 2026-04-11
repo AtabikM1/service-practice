@@ -18,7 +18,7 @@ class StockController extends Controller
         ]);
         try{
             $this->stockService->recordTransaction($validated);
-            return redirect('/')->with('success', 'Transaction Successful');
+            return redirect('/materials')->with('success', 'Transaction Successful');
         }catch (\Exception $exception){
             return back()->withErrors($exception->getMessage());
         }
