@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard - PT Indoprima')
+@section('title', 'Dashboard - Monitoring Informatif')
 @section('page_title', 'Dashboard Overview')
 
 @section('content')

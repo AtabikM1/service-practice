@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Portal Login - PT Indoprima')
+@section('title', 'Login')
 
 @push('styles')
     <style>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Riwayat Transaksi - PT Indoprima')
+@section('title', 'Riwayat Transaksi ')
 @section('page_title', 'Riwayat Transaksi Gudang')
 
 @section('content')

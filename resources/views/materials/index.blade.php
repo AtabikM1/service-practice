@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Master Material - PT Indoprima')
+@section('title', 'Master Material')
 @section('page_title', 'Master Data Material')
 
 @section('content')
