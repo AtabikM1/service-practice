@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,70 +9,100 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
     <style>
-        /* Definisi Tone Warna Biru Dongker */
         :root {
-            --navy-primary: #0a2540;   /* Biru dongker gelap */
-            --navy-hover: #153b61;     /* Biru dongker terang untuk hover */
-            --bg-light: #f4f7f6;       /* Abu-abu sangat terang untuk background konten */
+            --navy-primary: #0a2540;
+            --navy-hover: #153b61;
+            --bg-light: #f4f7f6;
         }
 
         body {
             background-color: var(--bg-light);
             font-family: 'Segoe UI', system-ui, sans-serif;
+            overflow-x: hidden; /* Cegah scroll horizontal yang bocor */
         }
 
-        /* Arsitektur Layout Utama */
-        .wrapper {
-            display: flex;
-            height: 100vh; /* KUNCI 1: Kunci tinggi aplikasi pas selayar monitor */
-            overflow: hidden; /* KUNCI 2: Matikan scrollbar utama browser */
+        /* LOGIKA DESKTOP (Layar > 768px) */
+        @media (min-width: 768px) {
+            .sidebar-wrapper {
+                position: fixed; /* Sidebar dipaku di kiri layar */
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 260px;
+                background-color: var(--navy-primary);
+                color: white;
+                z-index: 1040;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+                overflow-y: auto;
+            }
+
+            .content-wrapper {
+                margin-left: 260px; /* Konten utama digeser ke kanan menghindari sidebar */
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
         }
 
-        .sidebar-wrapper {
-            width: 260px;
-            background-color: var(--navy-primary);
-            color: white;
-            flex-shrink: 0;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-            height: 100vh;
-            overflow-y: auto; /* Opsional: Jaga-jaga jika besok menumu tambah banyak sampai ke bawah layar */
-        }
-
-        /* Area Sebelah Kanan (Nav, Konten, Footer) */
-        .content-wrapper {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-            height: 100vh;
-            overflow-y: auto; /* KUNCI 3: Beri izin scroll hanya di kotak kanan ini */
-            background-color: var(--bg-light); /* Pindahkan background body ke sini */
+        /* LOGIKA MOBILE (Layar < 768px) */
+        @media (max-width: 767.98px) {
+            .content-wrapper {
+                width: 100%;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+            .sidebar-wrapper {
+                background-color: var(--navy-primary); /* Warna untuk mode Offcanvas */
+                color: white;
+            }
         }
 
         main {
             flex-grow: 1;
-            padding: 2rem;
+            padding: 1.5rem; /* Sedikit dikecilkan agar di HP tidak terlalu sempit */
+        }
+
+        @media (min-width: 768px) {
+            main {
+                padding: 2rem;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="wrapper">
-    <aside class="sidebar-wrapper">
-        @include('partials.sidebar')
-    </aside>
+<nav class="navbar navbar-light bg-white border-bottom d-md-none px-3 shadow-sm sticky-top">
+    <a class="navbar-brand fw-bold" href="#" style="color: var(--navy-primary);">LogiSync WMS</a>
 
-    <div class="content-wrapper">
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</nav>
 
-        @include('partials.navbar')
-
-        <main>
-            @yield('content')
-        </main>
-
-        @include('partials.footer')
-
+<aside class="sidebar-wrapper offcanvas-md offcanvas-start" tabindex="-1" id="sidebarMenu">
+    <div class="offcanvas-header d-md-none bg-white">
+        <h5 class="offcanvas-title fw-bold" style="color: var(--navy-primary);">Menu Navigasi</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu" aria-label="Close"></button>
     </div>
+
+    <div class="offcanvas-body d-flex flex-column p-0">
+        @include('partials.sidebar')
+    </div>
+</aside>
+
+<div class="content-wrapper">
+
+    <div class="d-none d-md-block">
+        @include('partials.navbar')
+    </div>
+
+    <main>
+        @yield('content')
+    </main>
+
+    @include('partials.footer')
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

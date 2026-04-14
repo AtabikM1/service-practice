@@ -1,0 +1,54 @@
+version: '3.8'
+services:
+    # Container 1: Mesin PHP (Kita beri nama 'app')
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: wms_app
+        restart: unless-stopped
+        working_dir: /var/www
+        volumes:
+            - ./:/var/www # Sinkronisasi kodemu dengan folder di dalam container
+        networks:
+            - wms_network
+
+    # Container 2: Nginx Web Server
+    nginx:
+        image: nginx:alpine
+        container_name: wms_nginx
+        restart: unless-stopped
+        ports:
+            - "8000:80" # Akses di browser laptopmu via http://localhost:8000
+        volumes:
+            - ./:/var/www
+            - ./docker/nginx/app.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            - app
+        networks:
+            - wms_network
+
+    # Container 3: MySQL Database
+    db:
+        image: mysql:8.0
+        container_name: wms_db
+        restart: unless-stopped
+        environment:
+            # Mengambil data dari file .env milikmu
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_USER: ${DB_USERNAME}
+        volumes:
+            - db_data:/var/lib/mysql # Mengamankan data agar tidak hilang saat container mati
+        ports:
+            - "3306:3306"
+        networks:
+            - wms_network
+
+networks:
+    wms_network:
+        driver: bridge
+
+volumes:
+    db_data:
