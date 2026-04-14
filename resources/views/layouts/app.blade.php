@@ -35,6 +35,27 @@
                 box-shadow: 2px 0 10px rgba(0,0,0,0.1);
                 overflow-y: auto;
             }
+            /* Sidebar Wrapper */
+            .sidebar-wrapper {
+                background-color: var(--navy-primary) !important;
+                color: rgba(255, 255, 255, 0.8); /* Teks putih agak transparan */
+            }
+
+            /* Pastikan semua link di dalam sidebar berwarna putih */
+            .sidebar-wrapper a {
+                color: rgba(255, 255, 255, 0.9) !important;
+                text-decoration: none;
+            }
+
+            .sidebar-wrapper a:hover {
+                color: var(--accent-blue) !important;
+                background-color: var(--navy-hover);
+            }
+
+            /* Override Offcanvas Default */
+            .offcanvas-md {
+                border-right: none !important;
+            }
 
             .content-wrapper {
                 margin-left: 260px; /* Konten utama digeser ke kanan menghindari sidebar */

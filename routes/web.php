@@ -19,7 +19,7 @@ use App\Http\Controllers\AuthController;
 */
 
 Route::get('/', function () {
-    return redirect('/login');
+    return view('landing');
 });
 
 Route::middleware('guest')->group(function () {
