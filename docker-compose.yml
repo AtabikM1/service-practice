@@ -37,12 +37,10 @@ services:
             # Mengambil data dari file .env milikmu
             MYSQL_DATABASE: ${DB_DATABASE}
             MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-            MYSQL_PASSWORD: ${DB_PASSWORD}
-            MYSQL_USER: ${DB_USERNAME}
         volumes:
             - db_data:/var/lib/mysql # Mengamankan data agar tidak hilang saat container mati
         ports:
-            - "3306:3306"
+            - "33060:3306"
         networks:
             - wms_network
 

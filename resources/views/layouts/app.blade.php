@@ -18,13 +18,13 @@
         body {
             background-color: var(--bg-light);
             font-family: 'Segoe UI', system-ui, sans-serif;
-            overflow-x: hidden; /* Cegah scroll horizontal yang bocor */
+            overflow-x: hidden;
         }
 
         /* LOGIKA DESKTOP (Layar > 768px) */
         @media (min-width: 768px) {
             .sidebar-wrapper {
-                position: fixed; /* Sidebar dipaku di kiri layar */
+                position: fixed;
                 top: 0;
                 left: 0;
                 bottom: 0;
@@ -35,30 +35,23 @@
                 box-shadow: 2px 0 10px rgba(0,0,0,0.1);
                 overflow-y: auto;
             }
-            /* Sidebar Wrapper */
             .sidebar-wrapper {
                 background-color: var(--navy-primary) !important;
-                color: rgba(255, 255, 255, 0.8); /* Teks putih agak transparan */
+                color: rgba(255, 255, 255, 0.8);
             }
-
-            /* Pastikan semua link di dalam sidebar berwarna putih */
             .sidebar-wrapper a {
                 color: rgba(255, 255, 255, 0.9) !important;
                 text-decoration: none;
             }
-
             .sidebar-wrapper a:hover {
                 color: var(--accent-blue) !important;
                 background-color: var(--navy-hover);
             }
-
-            /* Override Offcanvas Default */
             .offcanvas-md {
                 border-right: none !important;
             }
-
             .content-wrapper {
-                margin-left: 260px; /* Konten utama digeser ke kanan menghindari sidebar */
+                margin-left: 260px;
                 min-height: 100vh;
                 display: flex;
                 flex-direction: column;
@@ -74,14 +67,14 @@
                 flex-direction: column;
             }
             .sidebar-wrapper {
-                background-color: var(--navy-primary); /* Warna untuk mode Offcanvas */
+                background-color: var(--navy-primary);
                 color: white;
             }
         }
 
         main {
             flex-grow: 1;
-            padding: 1.5rem; /* Sedikit dikecilkan agar di HP tidak terlalu sempit */
+            padding: 1.5rem;
         }
 
         @media (min-width: 768px) {
@@ -89,9 +82,40 @@
                 padding: 2rem;
             }
         }
+
+        /* CSS WAJIB UNTUK SPINNER (Tadi kamu lupakan) */
+        #global-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+        }
+
+        #global-loader.show {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
+
+<div id="global-loader">
+    <div class="spinner-border" style="width: 3rem; height: 3rem; color: var(--navy-primary);" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    <h6 class="mt-3 fw-bold" style="color: var(--navy-primary);">Memproses Data...</h6>
+</div>
 
 <nav class="navbar navbar-light bg-white border-bottom d-md-none px-3 shadow-sm sticky-top">
     <a class="navbar-brand fw-bold" href="#" style="color: var(--navy-primary);">LogiSync WMS</a>
@@ -127,5 +151,34 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const loader = document.getElementById('global-loader');
+
+        const forms = document.querySelectorAll('form');
+        forms.forEach(form => {
+            form.addEventListener('submit', function (e) {
+                if (this.checkValidity()) {
+                    loader.classList.add('show');
+                }
+            });
+        });
+
+        document.querySelectorAll('a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+
+                if (href && href !== '#' && !href.startsWith('javascript') && !this.hasAttribute('data-bs-toggle')) {
+
+
+                    loader.classList.add('show');
+
+
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

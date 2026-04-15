@@ -189,7 +189,7 @@
 
                 <div class="d-flex flex-wrap gap-3">
                     <a href="{{ route('login') }}" class="btn btn-accent text-decoration-none px-2 py-2">Coba Demo Sistem</a>
-                    <a href="#features" class="btn btn-outline-light rounded-pill px-2 py-2">Pelajari Logika</a>
+                    <a href="{{ route('login') }}"  class="btn btn-outline-light rounded-pill px-2 py-2">Masuk</a>
                 </div>
             </div>
 
