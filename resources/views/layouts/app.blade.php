@@ -149,13 +149,11 @@
     @include('partials.footer')
 
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const loader = document.getElementById('global-loader');
-
         const forms = document.querySelectorAll('form');
         forms.forEach(form => {
             form.addEventListener('submit', function (e) {
@@ -168,13 +166,8 @@
         document.querySelectorAll('a').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 const href = this.getAttribute('href');
-
                 if (href && href !== '#' && !href.startsWith('javascript') && !this.hasAttribute('data-bs-toggle')) {
-
-
                     loader.classList.add('show');
-
-
                 }
             });
         });
