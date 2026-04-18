@@ -1,24 +1,19 @@
-# Menggunakan image resmi PHP 8.3 versi FPM (FastCGI Process Manager)
-FROM php:8.3-fpm
+# 1. Gunakan image PHP dengan ekstensi yang dibutuhkan
+FROM php:8.2-fpm
 
-# Install dependensi sistem operasi Linux yang dibutuhkan Laravel
+# 2. Install sistem dependencies
 RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
-    unzip
+    git curl libpng-dev libonig-dev libxml2-dev zip unzip
 
-# Bersihkan cache untuk memperkecil ukuran container
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Install ekstensi PHP (termasuk pdo_mysql untuk database)
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
-
-# Ambil Composer langsung dari image resminya
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Set folder kerja di dalam container
+# 3. Set direktori kerja
 WORKDIR /var/www
+
+# 4. Copy file project ke dalam container
+COPY . /var/www
+
+# 5. Install composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN composer install --no-interaction --optimize-autoloader
+
+# 6. Jalankan perintah saat container nyala
+CMD ["php-fpm"]

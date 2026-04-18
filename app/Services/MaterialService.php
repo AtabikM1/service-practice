@@ -9,8 +9,6 @@ class MaterialService
 {
     public function getStats(){
         return  Material::with('stock')->latest()->paginate(15);
-
-
     }
     public function createMaterial(array $data)
     {
