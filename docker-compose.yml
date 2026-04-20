@@ -35,8 +35,8 @@ services:
         restart: unless-stopped
         environment:
             # Mengambil data dari file .env milikmu
-            MYSQL_DATABASE: ${DB_DATABASE}
-            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_DATABASE: ${DB_DATABASE:-wms_local}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root_password_lokal}
         volumes:
             - db_data:/var/lib/mysql # Mengamankan data agar tidak hilang saat container mati
         ports:
