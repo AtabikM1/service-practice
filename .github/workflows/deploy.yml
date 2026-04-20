@@ -56,21 +56,47 @@ jobs:
       - name: SSH to VPS and Update Container
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSHKEY }}
-          script: |
-            cd ~/invent-wms
+            host: ${{ secrets.HOST }}
+            username: ${{ secrets.USERNAME }}
+            key: ${{ secrets.SSHKEY }}
+            script: |
+              # Pindah ke folder kerja yang benar (Absolute Path)
+              cd /home/atabik/invent-wms
 
-            # Buat file .env agar variabel di YAML terisi
-            echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" > .env
-            echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
-            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+              # MEMBANGUN ULANG .ENV SECARA LENGKAP
+              # Perhatikan simbol '>' untuk baris pertama (overwrite)
+              # dan '>>' untuk baris selanjutnya (append)
 
-            # Eksekusi spesifik file produksi
-            docker compose -f docker-compose.prod.yml pull
-            docker compose -f docker-compose.prod.yml up -d
+              echo "APP_NAME='WMS Master'" > .env
+              echo "APP_ENV=production" >> .env
+              echo "APP_KEY=${{ secrets.APP_KEY }}" >> .env
+              echo "APP_DEBUG=false" >> .env
+              echo "APP_URL=${{ secrets.APP_URL }}" >> .env
 
-            sleep 10
-            docker exec wms_app php artisan migrate --force
-            docker image prune -f
+              echo "LOG_CHANNEL=stack" >> .env
+
+              echo "DB_CONNECTION=mysql" >> .env
+              echo "DB_HOST=wms_db" >> .env
+              echo "DB_PORT=3306" >> .env
+              echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
+              echo "DB_USERNAME=root" >> .env
+              echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+
+              echo "CACHE_DRIVER=file" >> .env
+              echo "SESSION_DRIVER=file" >> .env
+              echo "QUEUE_CONNECTION=sync" >> .env
+
+              # EKSEKUSI DOCKER
+              docker compose -f docker-compose.prod.yml pull
+              docker compose -f docker-compose.prod.yml up -d --force-recreate
+
+              # JEDA AGAR DB SIAP
+              echo "Waiting for database..."
+              sleep 15
+
+              # CLEAR CONFIG DAN MIGRATE
+              docker exec wms_app php artisan config:clear
+              docker exec wms_app php artisan migrate --force
+
+              # BERSIHKAN IMAGE LAMA
+              docker image prune -f
