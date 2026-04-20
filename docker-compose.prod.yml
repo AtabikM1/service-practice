@@ -1,0 +1,44 @@
+services:
+  app:
+    # LANGSUNG TARIK IMAGE, TIDAK ADA BUILD
+    image: ${DOCKERHUB_USERNAME}/invent-master:latest
+    container_name: wms_app
+    restart: unless-stopped
+    # TIDAK ADA VOLUME BIND KE ./var/www
+    networks:
+      - wms_network
+
+  nginx:
+    image: nginx:alpine
+    container_name: wms_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80" # VPS menggunakan port standar 80
+    volumes:
+      # KITA AMBIL KODE DARI CONTAINER APP, BUKAN DARI VPS
+      - wms_app_code:/var/www
+      # Kamu harus memastikan konfigurasi nginx ada di sini, atau pakai bawaan image
+    depends_on:
+      - app
+    networks:
+      - wms_network
+
+  db:
+    image: mysql:8.0
+    container_name: wms_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - wms_network
+
+networks:
+  wms_network:
+    driver: bridge
+
+volumes:
+  db_data:
+  wms_app_code: # Volume sharing antara app dan nginx

@@ -42,15 +42,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4 # Kita butuh ini supaya GitHub bisa baca docker-compose.yml
+        uses: actions/checkout@v4
 
-      - name: Copy docker-compose.yml to VPS
-        uses: appleboy/scp-action@v0.1.7 # Gunakan SCP untuk kirim file YML ke VPS
+      - name: Copy Production Compose to VPS
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSHKEY }}
-          source: "docker-compose.yml"
+          source: "docker-compose.prod.yml" # KIRIM FILE YANG BENAR
           target: "~/invent-wms"
 
       - name: SSH to VPS and Update Container
@@ -62,16 +62,15 @@ jobs:
           script: |
             cd ~/invent-wms
 
-            # 1. Tarik Image Terbaru
-            docker compose pull
+            # Buat file .env agar variabel di YAML terisi
+            echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" > .env
+            echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
+            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
 
-            # 2. Nyalakan ulang (Otomatis ganti container lama)
-            docker compose up -d
+            # Eksekusi spesifik file produksi
+            docker compose -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.prod.yml up -d
 
-            # 3. OTOMATISASI DATABASE (Sangat Penting!)
-            # Tunggu db siap sebentar
             sleep 10
             docker exec wms_app php artisan migrate --force
-
-            # 4. Bersihkan Image lama yang tidak terpakai (biar storage VPS gak penuh)
             docker image prune -f
