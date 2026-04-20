@@ -52,4 +52,4 @@ jobs:
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/invent-master:latest
             docker stop my-container || true
             docker rm my-container || true
-            docker run -d --name my-container -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/my-app:latest
+            docker run -d --name my-container -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/invent-master:latest
