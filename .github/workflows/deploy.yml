@@ -37,3 +37,19 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/wms-app:latest
+  deploy-to-vps:
+    needs: build-and-push # Tunggu build selesai baru deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH to VPS and Update Container
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          script: |
+            # Masuk ke folder project (sesuaikan)
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/my-app:latest
+            docker stop my-container || true
+            docker rm my-container || true
+            docker run -d --name my-container -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/my-app:latest
