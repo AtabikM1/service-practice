@@ -16,6 +16,7 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       # WAJIB: Ambil kode dari volume bersama
       - wms_app_code:/var/www
