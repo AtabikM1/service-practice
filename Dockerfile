@@ -1,4 +1,3 @@
-# 1. Gunakan image PHP dengan ekstensi yang dibutuhkan
 FROM php:8.2-fpm
 RUN apt-get update && apt-get install -y \
     git \
@@ -9,18 +8,16 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip
 
-# 3. BARU jalankan perintah install ekstensi PHP
 RUN docker-php-ext-install pdo_mysql mbstring
 
-# 3. Set direktori kerja
 WORKDIR /var/www
 
-# 4. Copy file project ke dalam container
 COPY . /var/www
 
-# 5. Install composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-interaction --optimize-autoloader
 
-# 6. Jalankan perintah saat container nyala
+# TAMBAHKAN INI: Berikan hak akses ke user www-data
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+
 CMD ["php-fpm"]

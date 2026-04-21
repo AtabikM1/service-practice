@@ -44,59 +44,58 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Copy Production Compose to VPS
+      - name: Copy Production Compose and Nginx to VPS
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSHKEY }}
-          source: "docker-compose.prod.yml" # KIRIM FILE YANG BENAR
-          target: "~/invent-wms"
+          # KIRIM COMPOSE DAN FOLDER NGINX
+          source: "docker-compose.prod.yml,docker/nginx/"
+          # PASTIKAN TARGET INI SAMA DENGAN DIREKTORI SSH DI BAWAH
+          target: "/home/atabik/invent-wms"
 
       - name: SSH to VPS and Update Container
         uses: appleboy/ssh-action@v1.0.3
         with:
-            host: ${{ secrets.HOST }}
-            username: ${{ secrets.USERNAME }}
-            key: ${{ secrets.SSHKEY }}
-            script: |
-              # Pindah ke folder kerja yang benar (Absolute Path)
-              cd /home/atabik/invent-wms
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          script: |
+            # Konsisten dengan target SCP di atas
+            cd /home/atabik/invent-wms
 
-              # MEMBANGUN ULANG .ENV SECARA LENGKAP
-              # Perhatikan simbol '>' untuk baris pertama (overwrite)
-              # dan '>>' untuk baris selanjutnya (append)
+            # MEMBANGUN ULANG .ENV SECARA LENGKAP
+            echo "APP_NAME='WMS Master'" > .env
+            echo "APP_ENV=production" >> .env
+            echo "APP_KEY=${{ secrets.APP_KEY }}" >> .env
+            echo "APP_DEBUG=false" >> .env
+            echo "APP_URL=${{ secrets.APP_URL }}" >> .env
 
-              echo "APP_NAME='WMS Master'" > .env
-              echo "APP_ENV=production" >> .env
-              echo "APP_KEY=${{ secrets.APP_KEY }}" >> .env
-              echo "APP_DEBUG=false" >> .env
-              echo "APP_URL=${{ secrets.APP_URL }}" >> .env
+            # TAMBAHKAN INI: Agar compose tahu image milik siapa
+            echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" >> .env
 
-              echo "LOG_CHANNEL=stack" >> .env
+            echo "LOG_CHANNEL=stack" >> .env
 
-              echo "DB_CONNECTION=mysql" >> .env
-              echo "DB_HOST=wms_db" >> .env
-              echo "DB_PORT=3306" >> .env
-              echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
-              echo "DB_USERNAME=root" >> .env
-              echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+            echo "DB_CONNECTION=mysql" >> .env
+            echo "DB_HOST=wms_db" >> .env
+            echo "DB_PORT=3306" >> .env
+            echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
+            echo "DB_USERNAME=root" >> .env
+            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
 
-              echo "CACHE_DRIVER=file" >> .env
-              echo "SESSION_DRIVER=file" >> .env
-              echo "QUEUE_CONNECTION=sync" >> .env
+            echo "CACHE_DRIVER=file" >> .env
+            echo "SESSION_DRIVER=file" >> .env
+            echo "QUEUE_CONNECTION=sync" >> .env
 
-              # EKSEKUSI DOCKER
-              docker compose -f docker-compose.prod.yml pull
-              docker compose -f docker-compose.prod.yml up -d --force-recreate
+            # EKSEKUSI DOCKER
+            docker compose -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.prod.yml up -d --force-recreate
 
-              # JEDA AGAR DB SIAP
-              echo "Waiting for database..."
-              sleep 15
+            echo "Waiting for database..."
+            sleep 15
 
-              # CLEAR CONFIG DAN MIGRATE
-              docker exec wms_app php artisan config:clear
-              docker exec wms_app php artisan migrate --force
+            docker exec wms_app php artisan config:clear
+            docker exec wms_app php artisan migrate --force
 
-              # BERSIHKAN IMAGE LAMA
-              docker image prune -f
+            docker image prune -f

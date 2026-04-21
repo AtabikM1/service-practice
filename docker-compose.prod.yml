@@ -1,10 +1,11 @@
 services:
   app:
-    # LANGSUNG TARIK IMAGE, TIDAK ADA BUILD
     image: ${DOCKERHUB_USERNAME}/invent-master:latest
     container_name: wms_app
     restart: unless-stopped
-    # TIDAK ADA VOLUME BIND KE ./var/www
+    volumes:
+      # WAJIB: Bagikan kode ke volume bersama
+      - wms_app_code:/var/www
     networks:
       - wms_network
 
@@ -13,11 +14,12 @@ services:
     container_name: wms_nginx
     restart: unless-stopped
     ports:
-      - "80:80" # VPS menggunakan port standar 80
+      - "80:80"
     volumes:
-      # KITA AMBIL KODE DARI CONTAINER APP, BUKAN DARI VPS
+      # WAJIB: Ambil kode dari volume bersama
       - wms_app_code:/var/www
-      # Kamu harus memastikan konfigurasi nginx ada di sini, atau pakai bawaan image
+      # WAJIB: Mount file konfigurasi dari VPS ke dalam Nginx
+      - ./docker/nginx/app.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - app
     networks:
@@ -41,4 +43,4 @@ networks:
 
 volumes:
   db_data:
-  wms_app_code: # Volume sharing antara app dan nginx
+  wms_app_code:
