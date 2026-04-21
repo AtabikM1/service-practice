@@ -91,6 +91,7 @@ jobs:
             # EKSEKUSI DOCKER
             docker compose -f docker-compose.prod.yml pull
             docker compose -f docker-compose.prod.yml up -d --force-recreate
+            docker compose -f docker-compose.prod.yml up -d --force-recreate wms_nginx
 
             echo "Waiting for database..."
             sleep 15
