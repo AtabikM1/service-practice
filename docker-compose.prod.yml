@@ -20,7 +20,9 @@ services:
       # WAJIB: Ambil kode dari volume bersama
       - wms_app_code:/var/www
       # WAJIB: Mount file konfigurasi dari VPS ke dalam Nginx
-      - ./docker/nginx/app.conf:/etc/nginx/conf.d/default.conf
+      - ./docker/nginx/app.conf:/etc/nginx/conf.d/default.conf\
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
     depends_on:
       - app
     networks:
