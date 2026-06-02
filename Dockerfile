@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip
 
-RUN docker-php-ext-indstall pdo_mysql mbstring
+RUN docker-php-ext-install pdo_mysql mbstring
 
 WORKDIR /var/www
 
