@@ -91,7 +91,7 @@
             <div class="card login-card">
                 <div class="card-header text-center">
                     <h4>System Login</h4>
-                    <p class="text-muted small mb-0">Silakan masuk untuk memulai sesi</p>
+                    <p class="text-muted small mb-0">Silakan masuk untuk memulai</p>
                 </div>
 
                 <div class="card-body p-4">

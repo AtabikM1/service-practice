@@ -14,8 +14,6 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
-      # --- TARUH DI SINI ---
       - name: Debug Secret Check
         run: |
           echo "Username length: ${#USER}"
@@ -23,7 +21,7 @@ jobs:
         env:
           USER: ${{ secrets.DOCKERHUB_USERNAME }}
           TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      # ---------------------
+
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -36,7 +34,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/invent-master:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}
   deploy-to-vps:
     needs: build-and-push
     runs-on: ubuntu-latest
@@ -50,9 +48,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSHKEY }}
-          # KIRIM COMPOSE DAN FOLDER NGINX
           source: "docker-compose.prod.yml,docker/nginx/"
-          # PASTIKAN TARGET INI SAMA DENGAN DIREKTORI SSH DI BAWAH
           target: "/home/atabik/invent-wms"
 
       - name: SSH to VPS and Update Container
@@ -62,17 +58,16 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSHKEY }}
           script: |
-            # Konsisten dengan target SCP di atas
+
             cd /home/atabik/invent-wms
 
-            # MEMBANGUN ULANG .ENV SECARA LENGKAP
             echo "APP_NAME='WMS Master'" > .env
             echo "APP_ENV=production" >> .env
             echo "APP_KEY=${{ secrets.APP_KEY }}" >> .env
             echo "APP_DEBUG=false" >> .env
             echo "APP_URL=${{ secrets.APP_URL }}" >> .env
 
-            # TAMBAHKAN INI: Agar compose tahu image milik siapa
+
             echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" >> .env
 
             echo "LOG_CHANNEL=stack" >> .env
@@ -88,7 +83,7 @@ jobs:
             echo "SESSION_DRIVER=file" >> .env
             echo "QUEUE_CONNECTION=sync" >> .env
 
-            # EKSEKUSI DOCKER
+
             docker compose -f docker-compose.prod.yml pull
             docker compose -f docker-compose.prod.yml up -d --force-recreate
             docker compose -f docker-compose.prod.yml up -d --force-recreate wms_nginx

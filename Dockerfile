@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip
 
-RUN docker-php-ext-install pdo_mysql mbstring
+RUN docker-php-ext-indstall pdo_mysql mbstring
 
 WORKDIR /var/www
 
@@ -17,7 +17,7 @@ COPY . /var/www
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-interaction --optimize-autoloader
 
-# TAMBAHKAN INI: Berikan hak akses ke user www-data
+
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
 CMD ["php-fpm"]
