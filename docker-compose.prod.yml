@@ -17,7 +17,6 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-
       - wms_app_code:/var/www
       - ./docker/nginx/app.conf:/etc/nginx/conf.d/default.conf
       - ./certbot/conf:/etc/letsencrypt
@@ -25,7 +24,17 @@ services:
     depends_on:
       - app
     networks:
-      - wms_network
+      - wms_network             # Jaringan internal untuk komunikasi ke wms_app dan wms_db
+      - global_routing_network  # TAMBAHAN: Jaringan global agar bisa mendeteksi chitchat_app_production
+
+  # TAMBAHAN: Masukkan service certbot ke sini karena Nginx ini yang mengontrol port utama
+  certbot:
+    image: certbot/certbot:latest
+    container_name: wms_certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    # Tidak perlu networks khusus karena certbot hanya menulis file token ke volume lokal
 
   db:
     image: mysql:8.0
@@ -42,6 +51,9 @@ services:
 networks:
   wms_network:
     driver: bridge
+  # TAMBAHAN: Daftarkan jaringan eksternal yang sudah dibuat via CLI sebelumnya
+  global_routing_network:
+    external: true
 
 volumes:
   db_data:
