@@ -19,8 +19,8 @@ use App\Http\Controllers\AuthController;
 */
 
 Route::get('/', function () {
-    return redirect('login');
-});
+    return view('landing.index');
+})->name('landing');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login',[ AuthController::class, 'showLogin'])->name('login');
@@ -32,5 +32,4 @@ Route::middleware('auth', 'prevent-back-history')->group(function () {
     Route::resource('materials', MaterialController::class);
     Route::resource('stocks', StockController::class);
     Route::get('/history', [HistoryController::class, 'index'])->name('history.index');
-
 });
